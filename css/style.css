@@ -1,0 +1,61 @@
+/*
+ * 網站整體樣式和佈局
+ * (除了 #map 的 height/width 外的樣式)
+ */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* 防止滾動條出現 */
+}
+
+/* 🟥 紅色邊框區塊：網站標題樣式 */
+#app-header {
+    position: absolute; /* 絕對定位，疊加在地圖之上 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 8px 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* 確保標題層級高於地圖 */
+    box-sizing: border-box;
+}
+
+#app-header h1 {
+    margin: 0;
+    font-size: 1em;
+    color: #000000; /* 模擬草稿圖的紅色標題色 */
+}
+
+
+/* * 🟦 藍色邊框區塊：圖層控制面板樣式調整
+ * Leaflet 的圖層控制面板是 L.control.layers，
+ * 它的類名是 leaflet-control-layers
+ */
+.leaflet-control-layers {
+    /* 增加內邊距和圓角，讓控制面板看起來更美觀 */
+    padding: 4px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    color: #000000; /* 模擬草稿圖的藍色字體 */
+}
+
+/* 2. 圖層控制面板的收合/展開按鈕 (Icon) */
+.leaflet-control-layers-toggle {
+    /* 這是右上方那個小按鈕的類別 */
+    /*background-image: url('data:image/svg+xml;utf8,<svg ...>'); /* 預設是 SVG icon */
+    background-size: 20px !important; /* 控制 icon 圖像的尺寸 */
+    width: 20px !important; /* 強制控制按鈕的寬度 */
+    height: 20px !important; /* 強制控制按鈕的高度 */
+    /*border: 2px solid #0000ff; /* 添加藍色邊框 */
+    /*border-radius: 50%; /* 變成圓形 */
+    box-sizing: border-box;
+}
+
+/* 調整控制面板中的個別圖層名稱樣式 */
+.leaflet-control-layers label span {
+    font-size: 0.9em;
+}
