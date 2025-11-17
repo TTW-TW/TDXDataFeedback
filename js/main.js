@@ -58,7 +58,7 @@ function stationPointToLayer(feature, latlng) {
     // ✨ 修正：使用 pane 選項，將標記繪製到與 GeoJSON 相同的層級
     return L.marker(latlng, { 
         icon: customIcon,
-        pane: 'overlayPane' // <--- 關鍵修改
+        //pane: 'overlayPane' // <--- 關鍵修改
     });
 }
 
