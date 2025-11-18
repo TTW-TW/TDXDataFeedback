@@ -1,9 +1,16 @@
+/** 圖層套疊Z-index順序
+ * TileLayer tilePane 200
+ * GeoJSON polygons / lines overlayPane 400
+ * Marker markerPane 600
+ * maskPane 650 // 自定義的台北市遮罩
+ * Popup popupPane 700
+ */
+
 // ===============================================
 // 1. 地圖初始化 & 底圖定義
 // ===============================================
 
 // 1.1 定義底圖 URL 模板 (以 NLSC 為例)
-// 注意：以下為常見的 NLSC 服務 WMS/WMTS 範例 URL，您可能需要根據實際服務類型調整
 // 由於 Leaflet 內建 L.tileLayer 不直接支持所有 WMTS 服務，這裡我們用 L.tileLayer 模擬。
 
 const nlscBaseMaps = {
@@ -32,10 +39,8 @@ const map = L.map('map', {
 }).setView([25.03, 121.55], 13); // [緯度, 經度], 縮放級別
 
 
-// 原始程式碼中 L.tileLayer(...).addTo(map) 的部分被上面的 'layers' 參數取代。
-
 // ===============================================
-// 2. 樣式定義函式 (滿足自定義上色需求)
+// 2. 樣式定義函式 (自定義上色、圖例數據定義)
 // ===============================================
 
 
@@ -47,7 +52,10 @@ const customIcon = L.icon({
     iconUrl: 'images/metro_marker.png', 
     iconSize: [12, 13],                  // 圖片的寬度和高度 
     iconAnchor: [5, 13],                // 標記尖端與地圖座標對齊點的相對位置 (例如：寬度一半, 高度底部)；標記定位點：X = 5 (從水平中心 6 修正至 5，微幅向左調整)；Y = 13 (底部對齊)
-    popupAnchor: [0, -13]                // 彈出視窗與標記的相對位置 彈窗錨點：將彈窗向上推 13px
+    popupAnchor: [0, -13],                // 彈出視窗與標記的相對位置 彈窗錨點：將彈窗向上推 13px
+    // 防止 Leaflet 創建 Marker Shadow，簡化 Z-Order
+    // shadowUrl: null, 
+    // shadowSize: [0, 0]
 });
 
 /**
@@ -58,7 +66,8 @@ function stationPointToLayer(feature, latlng) {
     // ✨ 修正：使用 pane 選項，將標記繪製到與 GeoJSON 相同的層級
     return L.marker(latlng, { 
         icon: customIcon,
-        //pane: 'overlayPane' // <--- 關鍵修改
+        pane: 'markerPane', // <--- 關鍵修改 
+        shadowPane: 'markerPane'
     });
 }
 
@@ -97,22 +106,22 @@ function lineStyle(feature) {
         color = '#fff300';
     }
         
-    // 您可以根據需要添加更多路線顏色
+    // 可根據需要添加更多路線顏色
 
     return {
         color: color,
-        weight: 2,
-        opacity: 0.8
+        weight: 1.5,
+        opacity: 0.9
     };
 }
 
 /**
  * 面狀圖層樣式定義 (捷運人數網格)
- * 根據人數 (ridership 屬性) 決定顏色 (等級式上色)。
+ * 根據人數  決定顏色 (等級式上色)。
  */
 function gridStyle(feature) {
-    const metro_ridership = feature.properties.Mv_Act; // 假設 GeoJSON 屬性名為 ridership
-    let fillColor = 'transparent'; // 預設顏色：淺灰色
+    const metro_ridership = feature.properties.Mv_Act; 
+    let fillColor = 'transparent'; // 預設顏色：透明
 
     // 等級式顏色判斷
     if (metro_ridership === 0 ) {
@@ -131,7 +140,69 @@ function gridStyle(feature) {
 
     return {
         fillColor: fillColor,
-        fillOpacity: 0.7,
+        fillOpacity: 0.8,
+        weight: 1,
+        color: 'white' // 邊框顏色
+    };
+}
+
+/**
+ * 面狀圖層樣式定義 (公車人數網格)
+ * 根據人數決定顏色 (等級式上色)。
+ */
+function gridStyleBus(feature) {
+    const bus_ridership = feature.properties.Bv_Act; 
+    let fillColor = 'transparent'; // 預設顏色：透明
+
+    // 等級式顏色判斷
+    if (bus_ridership === 0 ) {
+        fillColor = 'transparent'; 
+    } else if (bus_ridership >= 1 && bus_ridership < 250 ) {
+        fillColor = '#d5efcf'; 
+    } else if (bus_ridership >= 250 && bus_ridership < 500 ) {
+        fillColor = '#9ed798'; 
+    }  else if (bus_ridership >= 500 && bus_ridership < 1000 ) {
+        fillColor = '#55b567';
+    } else if (bus_ridership >= 1000 && bus_ridership < 1500 ) {
+        fillColor = '#1d8641';
+    } else if (bus_ridership > 1500 ) {
+       fillColor = '#00441b';
+    } 
+
+    return {
+        fillColor: fillColor,
+        fillOpacity: 0.8,
+        weight: 1,
+        color: 'white' // 邊框顏色
+    };
+}
+
+/**
+ * 面狀圖層樣式定義 (公車站數量網格)
+ * 根據人數決定顏色 (等級式上色)。
+ */
+function gridStyleBusNum(feature) {
+    const bus_num = feature.properties.Bus_numd; 
+    let fillColor = 'transparent'; // 預設顏色：透明
+
+    // 等級式顏色判斷
+    if (bus_num === 0 ) {
+        fillColor = 'transparent'; 
+    } else if (bus_num >= 1 && bus_num < 3 ) {
+        fillColor = '#f1eef6'; 
+    } else if (bus_num >= 3 && bus_num < 5 ) {
+        fillColor = '#adb8d3ff'; 
+    }  else if (bus_num >= 5 && bus_num < 8 ) {
+        fillColor = '#4faeceff';
+    } else if (bus_num >= 8 && bus_num < 10 ) {
+        fillColor = '#26608aff';
+    } else if (bus_num > 10 ) {
+       fillColor = '#062455ff';
+    } 
+
+    return {
+        fillColor: fillColor,
+        fillOpacity: 0.8,
         weight: 1,
         color: 'white' // 邊框顏色
     };
@@ -140,21 +211,104 @@ function gridStyle(feature) {
 /**
  * 遮罩圖層樣式定義 (taipei_mask)
  * 將非台北市區域顯示為淺灰色半透明。
+ * 建立一個自訂 pane：z-index 比 markerPane 還高
  */
+
+map.createPane('maskPane');
+map.getPane('maskPane').style.zIndex = 650;  // 高於 markerPane(600)
+//map.getPane('maskPane').style.pointerEvents = 'none'; // 遮罩不阻擋滑鼠動作（需要的話）
+
+
 function maskStyle(feature) {
-    // 假設您的 GeoJSON 檔案中，包含所有區域的多邊形，
-    // 並且有一個屬性 (例如 is_taipei) 可以判斷是否為台北市。
-    // 如果檔案本身就只有一個大的遮罩區塊，則無需條件判斷，直接套用樣式即可。
-    
-    // 我們假設這個 GeoJSON 是 "非台北市區域" 的遮罩多邊形。
 
     return {
         fillColor: '#cccccc', // 淺灰色
         fillOpacity: 0.8,     // 半透明度
         weight: 0,            // 邊框設為 0，避免遮罩有邊線
+        pane: 'maskPane', // ⭐ 關鍵：運用自定義的pane，讓套疊序放在最高層的 pane
         interactive: false    // 設為不可互動 (點擊時不觸發彈窗，焦點留給底下的圖層)
     };
 }
+
+//=====================
+// 圖層控制選項中的圖例
+//======================
+
+/**
+ * 集中定義圖例數據 (LayerName 必須與 loadGeoJsonLayer 的 layerName 嚴格匹配)
+ * 鍵 (Key): 必須是 layerName
+ * 值 (Value): { title: 圖例標題, items: [{color: 顏色, text: 顯示文字}, ...] }
+ */
+const LegendDefinitions = {
+    // 捷運人潮網格的圖例數據
+    '捷運活躍時段平均人流': { // <--- 💡Key 必須匹配 loadGeoJsonLayer 的 layerName
+        title: '捷運活躍時段平均人流',
+        items: [
+            // 顏色必須與 gridStyle 函式中的顏色值一致
+            { color: '#580954ff', text: '> 6,000 人 / 時' }, 
+            { color: '#87489e', text: '3,000 – 5,999 人 / 時' }, 
+            { color: '#8a7cba', text: '1000 – 2,999 人 / 時' },
+            { color: '#9cacd2', text: '500 – 999 人 / 時' }, // 注意區間調整為 999
+            { color: '#bfd6e8', text: '1 – 499 人 / 時' },
+            { color: 'transparent', text: '0 人 / 時 (透明)', border: '1px solid #999' } // 處理透明情況
+        ]
+    },
+
+    '公車活躍時段平均人流': { // <--- 💡Key 必須匹配 loadGeoJsonLayer 的 layerName
+        title: '公車活躍時段平均人流',
+        items: [
+            // 顏色必須與 gridStyle 函式中的顏色值一致
+            { color: '#00441b', text: '> 1,500 人 / 時' }, 
+            { color: '#1d8641', text: '1,000 – 1,500 人 / 時' }, 
+            { color: '#55b567', text: '500 – 1,000 人 / 時' },
+            { color: '#9ed798', text: '250 – 499 人 / 時' }, // 注意區間調整為 999
+            { color: '#d5efcf', text: '1 – 249 人 / 時' },
+            { color: 'transparent', text: '0 人 / 時 (透明)', border: '1px solid #999' } // 處理透明情況
+        ]
+    },
+        '公車站數量': { // <--- 💡Key 必須匹配 loadGeoJsonLayer 的 layerName
+        title: '公車站數量',
+        items: [
+            // 顏色必須與 gridStyle 函式中的顏色值一致
+            { color: '#062455ff', text: '> 10 站' }, 
+            { color: '#26608aff', text: '8 – 10 站' }, 
+            { color: '#4faeceff', text: '5 – 7 站' },
+            { color: '#adb8d3ff', text: '3 – 4 站' }, // 注意區間調整為 999
+            { color: '#f1eef6', text: '1 – 2 站' },
+            { color: 'transparent', text: '0 站 (透明)', border: '1px solid #999' } // 處理透明情況
+        ]
+    }
+};
+
+/**
+ * 根據 LegendDefinitions 物件動態生成圖例 HTML。
+ * @param {string} layerName - 圖層名稱 (用於查找 LegendDefinitions)
+ * @returns {string} 圖例 HTML 內容
+ */
+function createLegendHtml(layerName) {
+    const definition = LegendDefinitions[layerName];
+    if (!definition) {
+        return ''; // 如果該圖層沒有定義圖例，則返回空字串
+    }
+
+    const labels = [];
+    
+    // 標題 (從定義中讀取)，如果有需要額外顯示標題的話
+    // labels.push(`<div style="font-weight: bold; margin-top: 5px; margin-bottom: 5px;">${definition.title}</div>`);
+
+    // 遍歷圖例項目
+    definition.items.forEach(item => {
+        const borderStyle = item.border || '1px solid #999'; // 如果有定義邊框則使用，否則使用預設
+        
+        labels.push(
+            // 給<i>添加寬度、高度和浮動內聯樣式
+            `<i style="background:${item.color}; border: ${borderStyle}; width: 12px; height: 12px; float: left; margin-left: 20px; margin-right: 5px; opacity: 0.7;"></i> ${item.text}<br style="clear: both;">`
+        );
+    });
+
+    return labels.join('');
+}
+
 
 // ===============================================
 // 3. 彈窗與互動定義函式
@@ -163,45 +317,86 @@ function maskStyle(feature) {
 /**
  * 點擊圖徵時彈出資訊視窗的通用處理函式。
  */
+
+// 將原始欄位名稱調整為自定義名稱 (欄位名 : 顯示名稱)
+const fieldMappings = {
+    // 捷運人潮網格 (假設 layer_type: '捷運人潮')
+    '捷運活躍時段平均人流': { // 💡必須與載入時給定的圖層名稱相同
+        'id': '網格 ID',
+        'X_co': 'X坐標',
+        'y_co': 'Y坐標',
+        'Mv_Act': '捷運分時人流(人次/小時)' 
+    },
+     // 公車人潮網格
+    '公車活躍時段平均人流': { // 💡必須與載入時給定的圖層名稱相同
+        'id': '網格 ID',
+        'X_co': 'X坐標',
+        'y_co': 'Y坐標',
+        'Bv_Act': '公車分時人流(人次/小時)' 
+    },
+    // 捷運站點 (假設 layer_type: '捷運站點')
+    '捷運站位置': {
+        'FID CODE': '站點代碼',
+        'NAME': '捷運站名'
+    },
+    // 捷運路線 (假設 layer_type: '捷運路線')
+    '捷運路線': {
+        'MRTID': '捷運代碼',
+        'MRTSYS' : '捷運路線',
+        'MRTCODE': '路線名稱'
+    },
+    '公車站數量': {
+        'id': '網格 ID',
+        'X_co': 'X坐標',
+        'y_co': 'Y坐標',
+        'Bus_numd': '站數' 
+    },
+
+};
+
+
 function onEachFeature(feature, layer) {
     if (feature.properties) {
-        let popupContent = '<h4>圖徵資訊</h4>';
+        const layerType = feature.properties.layer_type || '圖徵資訊'; // 預設值
         
+        // ✨ 問題 1 修正點：根據 layerType 設定 H4 標題
+        let popupContent = `<h4>${layerType}</h4>`; 
+        
+        const currentMappings = fieldMappings[layerType] || {}; // 獲取當前圖層的名稱對應表
+        
+        // 排除列表，無論哪個圖層都排除
+        const excludedKeys = ['OBJECTID', 'Shape_Leng', 'Shape_Area', 'layer_type', 'X_co', 'y_co' ];
+
         // 遍歷所有屬性，並將其格式化到彈窗中
         for (const key in feature.properties) {
-            // 排除不需要展示的屬性，例如幾何ID
-            if (key !== 'OBJECTID' && key !== 'Shape_Leng' && key !== 'Shape_Area') {
-                popupContent += `<b>${key}</b>: ${feature.properties[key]}<br>`;
+            // 排除不需要展示的屬性
+            if (!excludedKeys.includes(key)) {
+                // 獲取顯示名稱，如果對應表裡沒有，就使用原始 key
+                const displayName = currentMappings[key] || key; 
+                
+                popupContent += `<b>${displayName}</b>: ${feature.properties[key]}<br>`;
             }
         }
         
-        // 實現您的特定需求：點擊到面狀網格id = 1036，展示 id, 座標, 人數
-        // 由於 Leaflet Popup 會自動定位到點擊位置，這裡只需組裝文字內容。
-        // 這裡以網格 ID 和人數為例：
-        if (feature.properties.grid_id && feature.properties.ridership) {
-             popupContent = `
-                <div class="custom-popup">
-                    <b>ID:</b> ${feature.properties.grid_id}<br>
-                    <b>人數:</b> ${feature.properties.ridership}
-                </div>
-            `;
-        } else if (feature.properties.station_name) {
-            // 捷運站點彈窗範例
-             popupContent = `
-                <div class="custom-popup">
-                    <b>捷運站:</b> ${feature.properties.station_name}
-                </div>
-            `;
-        }
-
+        // --- 舊有的特定條件判斷區塊已移除或簡化 ---
+        // 由於我們改用屬性遍歷，舊有的 if (feature.properties.grid_id) 區塊可以簡化或移除。
 
         layer.bindPopup(popupContent);
     }
 }
 
+
 // ===============================================
 // 4. 資料載入與圖層創建
 // ===============================================
+const OVERLAY_ORDER = [
+    '捷運活躍時段平均人流',
+    '公車活躍時段平均人流', 
+    '公車站數量',           
+    '捷運站位置',
+    '捷運路線',
+    '非台北市區域遮罩'
+];
 
 const overlayMaps = {}; // 用於 L.control.layers 的圖層集合物件
 
@@ -220,6 +415,16 @@ async function loadGeoJsonLayer(url, styleFn, layerName, addMap = true, pointToL
         }
         const data = await response.json();
 
+        // 給所有圖徵添加一個識別屬性
+        if (data.features) {
+            data.features.forEach(feature => {
+                if (!feature.properties) {
+                    feature.properties = {};
+                }
+                feature.properties.layer_type = layerName; // 使用 layerName 作為識別碼
+            });
+        }
+
         const geoJsonLayer = L.geoJSON(data, {
             style: styleFn,          // 應用自定義樣式
             onEachFeature: onEachFeature, // 應用彈窗功能
@@ -234,14 +439,11 @@ async function loadGeoJsonLayer(url, styleFn, layerName, addMap = true, pointToL
         // 將圖層存入 control.layers 的集合
         overlayMaps[layerName] = geoJsonLayer;
 
+        // 圖層套疊順序將依照"後開啟在頂層"的邏輯
+        // 除了marker、maskpane(自定義順序的圖層)以外
         if (addMap) {
             geoJsonLayer.addTo(map);
-
-            // 判斷是否需要強制提升 Z-Order
-            if (layerName === '非台北市區域遮罩') {
-                geoJsonLayer.bringToFront(); 
-            }
-        }
+        };
 
 
     } catch (error) {
@@ -252,32 +454,44 @@ async function loadGeoJsonLayer(url, styleFn, layerName, addMap = true, pointToL
 
 // 會依序載入個圖層
 
-// 3. 面狀 (捷運人潮網格) - 預設關閉 
-// 更改路徑：'data/metro_population_grids.geojsonl.json' -> 'data/metro_population_grids.geojson'
-loadGeoJsonLayer('data/metro_population_grids.geojson', gridStyle, '捷運人潮', true);
+// 面狀 (捷運人潮網格) 💡此處的圖層名稱需要匹配其定義title
+loadGeoJsonLayer('data/metro_population_grids.geojson', gridStyle, '捷運活躍時段平均人流', true);
 
-// 1. 線狀 (捷運路線) - 預設開啟
-// 更改路徑：'data/metro_lines.geojsonl.json' -> 'data/metro_lines.geojson'
+// 面狀 (公車人潮網格) 💡此處的圖層名稱需要匹配其定義title
+loadGeoJsonLayer('data/bus_population_grids.geojson', gridStyleBus, '公車活躍時段平均人流', false);
+
+// 面狀 (公車人潮網格) 💡此處的圖層名稱需要匹配其定義title
+loadGeoJsonLayer('data/bus_num_grids.geojson', gridStyleBusNum, '公車站數量', false);
+
+// 線狀 (捷運路線) 
 loadGeoJsonLayer('data/metro_lines.geojson', lineStyle, '捷運路線', true);
 
-// 2. 點狀 (捷運站點) - 預設開啟
-// 更改路徑：'data/metro_stations.geojsonl.json' -> 'data/metro_stations.geojson'
-loadGeoJsonLayer('data/metro_stations.geojson', null, '捷運站點', true, stationPointToLayer);
+// 點狀 (捷運站點)
+loadGeoJsonLayer('data/metro_stations.geojson', null, '捷運站位置', false, stationPointToLayer);
 
-
-// 4. 面狀 (台北市遮罩) - 預設開啟 (在控制面板中)
+// 99. 面狀 (台北市遮罩) - 預設開啟 (在控制面板中)
 // 由於我們將它納入 overlayMaps，Leaflet 會自動處理其疊加順序
 loadGeoJsonLayer('data/taipei_mask.geojson', maskStyle, '非台北市區域遮罩', true);
 
 
 // ===============================================
-// 5. 圖層控制面板實作 (可收合/展開)
+// 5. 圖層控制面板實作 (可收合/展開、調整透明度)
 // ===============================================
 
 // 延遲執行，確保所有圖層都已載入到 overlayMaps 中
 setTimeout(() => {
+
+    // ⭐ 關鍵修正：依照 OVERLAY_ORDER 重新排序 overlayMaps 屬性
+    const orderedOverlayMaps = {};
+    OVERLAY_ORDER.forEach(layerName => {
+        // 只有當 overlayMaps 中存在該圖層時，才將其添加到有序集合中
+        if (overlayMaps[layerName]) {
+            orderedOverlayMaps[layerName] = overlayMaps[layerName];
+        }
+    });
+
     // Leaflet 預設的圖層控制元件 (Control)
-    L.control.layers(
+    const layerControl = L.control.layers(
         // 第一個參數：Base Layers (底圖，使用 radio button 單選)
         nlscBaseMaps,        
         
@@ -289,12 +503,112 @@ setTimeout(() => {
         }
     ).addTo(map);
 
+    const controlContainer = layerControl.getContainer();
+
+    const layerList = controlContainer.querySelector('.leaflet-control-layers-overlays');
+    const overlayList = controlContainer.querySelector('.leaflet-control-layers-overlays');
+
+    // 1. 條件式圖例注入 (單一、正確的迴圈邏輯)
+    const layerNames = Object.keys(LegendDefinitions);
+    const totalLayersWithLegend = layerNames.length;
+    
+    // 遍歷所有需要圖例的圖層定義
+    for (let i = 0; i < totalLayersWithLegend; i++) {
+        const layerName = layerNames[i];
+
+        // 確保該圖層在控制面板中存在
+        const labels = overlayList.querySelectorAll('label');
+        let targetElement = null;
+        
+        labels.forEach(label => {
+            // 找到包含圖層名稱的 <label> 元素
+            if (label.textContent.includes(layerName)) {
+                targetElement = label;
+            }
+        });
+
+        if (targetElement) {
+            // 創建並生成圖例 HTML
+            const legendContainer = L.DomUtil.create('div', 'legend-container');
+            legendContainer.innerHTML = createLegendHtml(layerName);
+            
+            // 將圖例容器插入到目標標籤之後
+            targetElement.after(legendContainer);
+            
+            // 設置圖例容器的樣式
+            // 移除 borderTop，讓圖例直接接續標籤
+            // legendContainer.style.borderTop = '1px solid #ddd'; // 刪除或註解
+            legendContainer.style.paddingTop = '5px';
+            legendContainer.style.marginTop = '5px';
+            
+            
+            // ⭐ 關鍵：在圖例結束後，如果後面還有其他圖例組，則添加分隔線
+            if (i < totalLayersWithLegend - 1) {
+                const separator = L.DomUtil.create('div', 'leaflet-control-layers-separator');
+                
+                // 設置分隔線的標準 Leaflet 樣式
+                separator.style.height = '0';
+                separator.style.margin = '6px 0'; // Leaflet 標準的垂直間距
+                separator.style.borderTop = '1px solid #ddd'; // Leaflet 標準的灰色線
+
+                // 將分隔線放在圖例容器之後
+                legendContainer.after(separator);
+            }
+        }
+    }
+
+    // 2. 疊加圖層透明度滑動條
+    for (const [layerName, layerInstance] of Object.entries(overlayMaps)) {
+        // 找到控制面板中對應的 <label> 元素
+        const label = Array.from(layerList.querySelectorAll('label')).find(
+            l => l.textContent.includes(layerName)
+        );
+
+        if (label) {
+            // 創建滑動條元素
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.min = '0';
+            slider.max = '1';
+            slider.step = '0.05';
+            // 根據圖層當前狀態設定初始值 (GeoJSON 預設為 1.0)
+            slider.value = layerInstance.options.opacity !== undefined ? layerInstance.options.opacity : 0.9; 
+            slider.style.width = '70px'; // 調整滑動條寬度
+            slider.style.marginLeft = '10px';
+
+            // 監聽滑動條事件
+            slider.addEventListener('input', (e) => {
+                const newOpacity = parseFloat(e.target.value);
+                
+                // 檢查圖層類型並調整透明度
+                if (layerInstance.setOpacity) {
+                    // 對 GeoJSON 或 TileLayer 適用
+                    layerInstance.setOpacity(newOpacity);
+                } else if (layerInstance.eachLayer) {
+                    // 對於 L.geoJSON (它是一個 L.layerGroup)，遍歷其下的所有圖元
+                    layerInstance.eachLayer(function(subLayer) {
+                        if (subLayer.setStyle) {
+                            subLayer.setStyle({ opacity: newOpacity, fillOpacity: newOpacity * 1.0 });
+                        }
+                    });
+                }
+            });
+
+            // 將滑動條添加到標籤後
+            label.appendChild(slider);
+
+            // 調整 label 樣式以更好地容納滑動條
+            label.style.display = 'flex';
+            label.style.justifyContent = 'space-between';
+        }
+    }
     // 調整地圖視角，確保所有載入的圖層都在視野範圍內 (選用)
     // 這裡我們只是初始化，如果需要FitBounds，需要先確保所有GeoJSON都已載入
 }, 1000); // 給予 1 秒延遲，確保異步載入的 GeoJSON 處理完畢
 
+
 // ===============================================
-// 6. 點擊座標和縮放等級調整
+// 99. 點擊座標和縮放等級調整
 // ===============================================
 
 // 增加一個簡單的座標顯示 (選用)

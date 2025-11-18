@@ -3,7 +3,9 @@
  * (除了 #map 的 height/width 外的樣式)
  */
 
-body {
+ /* 確保 HTML 和 Body 佔滿整個視口 */
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -11,23 +13,72 @@ body {
 }
 
 /* 🟥 紅色邊框區塊：網站標題樣式 */
+
+
+/* 1. 設置 Flex 容器 */
+#app-container {
+    display: flex;
+    flex-direction: column; /* 垂直排列子元素 (header, map) */
+    height: 100%; /* 確保容器佔滿整個 body 高度 */
+    width: 100%;
+}
+
+/* 2. 標題橫幅樣式 */
 #app-header {
-    position: absolute; /* 絕對定位，疊加在地圖之上 */
+    /* 確保 header 有一個固定/自動的高度，例如： */
+    flex-shrink: 0; /* 防止 header 被壓縮 */
+    padding: 4px 20px;
+    background-color: #757b7b; /* 淺色背景，可自訂 */
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* 確保它在地圖元素之上 */
+
+    display: flex;
+    justify-content: space-between;
+
+
+}
+
+header h1{
+    font-size: 0.9em ;
+    font-weight: 500;
+    color: white;
+    margin: 4px 8px ;
+}
+
+
+header p{
+    font-size: 0.9em ;
+    font-weight: 500;
+    color: white;
+    margin: 4px 8px ;
+}
+
+/* 3. 地圖樣式 */
+#map {
+    flex-grow: 1; /* 讓地圖佔據所有剩餘的垂直空間 */
+    width: 100%;
+    /* 移除原有的 height: 100vh; */
+}
+/**
+#app-header {
+    position: absolute; /* 絕對定位，疊加在地圖之上 
     top: 0;
     left: 0;
     width: 100%;
     padding: 8px 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* 確保標題層級高於地圖 */
+    z-index: 1000; /* 確保標題層級高於地圖 
     box-sizing: border-box;
 }
 
 #app-header h1 {
     margin: 0;
     font-size: 1em;
-    color: #000000; /* 模擬草稿圖的紅色標題色 */
+    color: #000000; /* 模擬草稿圖的紅色標題色 
 }
+*/
 
 
 /* * 🟦 藍色邊框區塊：圖層控制面板樣式調整
@@ -59,3 +110,21 @@ body {
 .leaflet-control-layers label span {
     font-size: 0.9em;
 }
+
+/* css/style.css */
+/* 自定義圖例控件的基礎樣式 */
+.info.legend {
+    line-height: 1.5;
+    color: #555;
+    background: white; /* 已經在 JS 中設定，但 CSS 也可以 */
+    border-radius: 5px;
+}
+
+.info.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
