@@ -127,8 +127,9 @@ spinner
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    padding: 4px;
+    padding: 12px;
     background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
 }
 
 .spinner {
@@ -168,7 +169,6 @@ spinner
 
 .swal2-container{
     z-index: 20000;
-    max-height: 350px;
 }
 
 .swal2-container.swal2-backdrop-show,
