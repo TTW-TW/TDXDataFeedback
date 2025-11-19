@@ -127,6 +127,8 @@ spinner
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    padding: 4px;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .spinner {
@@ -176,7 +178,6 @@ spinner
 }
 
 .sweet2-alert .swal2-text {
-    max-height: 6em; /* To be adjusted as you like */
     overflow-y: scroll !important;
     width: 100%;
 }
