@@ -35,12 +35,13 @@ html, body {
 
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
 
 }
 
 header h1{
-    font-size: 0.9em ;
+    font-size: 0.8em ;
     font-weight: 500;
     color: white;
     margin: 4px 8px ;
@@ -59,6 +60,8 @@ header p{
     flex-grow: 1; /* 讓地圖佔據所有剩餘的垂直空間 */
     width: 100%;
     /* 移除原有的 height: 100vh; */
+    z-index: 10; 
+    
 }
 /**
 #app-header {
@@ -156,4 +159,35 @@ header p{
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.datainfo-wrapper{
+    width: calc(100vw - 12px);
+}
+.info-card {
+    width: calc(100vw - 12px);
+    border-color: white;
+    box-shadow: inset;
+    margin: 0 auto;
+}
+
+.swal2-container{
+    z-index: 20000;
+}
+
+.swal2-container.swal2-backdrop-show,
+.swal2-container.swal2-noanimation {
+  background: rgba(0,0,0,0.25) !important; /* 想更清楚看見地圖可降到 0.15，或改成 transparent */
+  backdrop-filter: none !important; /* 移除模糊，避免像失焦消失 */
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.9em;
+    display: block;
+
+    &:hover{
+        color: yellow;
+    }
 }

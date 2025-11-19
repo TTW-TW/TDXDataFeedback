@@ -755,3 +755,53 @@ Promise.all([
     // 可以在這裡顯示滑鼠當前位置的經緯度
     // console.log(`Lat: ${e.latlng.lat.toFixed(4)}, Lng: ${e.latlng.lng.toFixed(4)}`);
 //});
+
+
+function showInfoModal() {
+  const html = `
+    <p style=";text-align: left; font-size:1em">資料來源：123</p>
+    <ul>
+      <li style=";text-align: left; font-size:0.9em">資料集</li>
+      <li style=";text-align: left;  font-size:0.9em">資料集</li>
+      <li style=";text-align: left;  font-size:0.9em">資料集</li>
+    </ul>
+  `;
+
+  Swal.fire({
+    title: '標題',
+    html,
+    confirmButtonText: '關閉',
+    allowOutsideClick: true,   // 允許點背景關閉（可依需求）
+    allowEscapeKey: true,
+    backdrop:false,
+    //backdrop: 'rgba(0,0,0,0.9)', // 或 false 完全不加遮罩
+
+    didOpen: () => {
+      // 開啟彈窗可能改變布局，對 Leaflet 進行重算
+      if (map && map.invalidateSize) {
+        setTimeout(() => map.invalidateSize(), 50);
+      }
+    },
+    didClose: () => {
+      if (map && map.invalidateSize) {
+        setTimeout(() => map.invalidateSize(), 50);
+      }
+    }
+  });
+}
+
+// 例如在頁首右上角的「資料說明」按鈕綁定
+document.getElementById('demo1')?.addEventListener('click', showInfoModal);
+
+// 若你想在載入後自動顯示一次
+// window.addEventListener('load', showInfoModal);
+
+// const dataDescription = '<p>資料來源：123</p><ul><li>資料集</li><li>資料集</li><li>資料集</li></ul>'
+
+// document.getElementById("demo1").addEventListener("click",function(){
+//     Swal.fire({
+//         title: '標題',
+//         html:  '<p>資料來源：123</p><ul><li>資料集</li><li>資料集</li><li>資料集</li></ul>',
+//         confirmButtonText:"確定",
+//     });
+// });

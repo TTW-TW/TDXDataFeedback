@@ -6,6 +6,7 @@
     <title>GIS捷運圖層展示系統</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <!--
     <style>
@@ -22,20 +23,23 @@
         
         <header id="app-header">
             <h1>GIS 捷運圖層展示系統</h1>
-            <p>資料說明</p>
+            <a  href='#' id="demo1">ⓘ 資料說明</a>
         </header>
 
         <div id="loading-spinner" class="loading-spinner">
             <div class="spinner"></div>
             <div class="loading-text">資料載入中…</div>
         </div>
-        
+
+
         <div id="map">
         </div>
 
     </div>
 
+    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="js/main.js"></script>
 
