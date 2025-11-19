@@ -20,9 +20,9 @@ const nlscBaseMaps = {
     }),
     
     // 臺灣通用電子地圖 (標準) - 用於替換原始的 OSM
-    //"臺灣通用電子地圖(標準)": L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}', {
-    //    attribution: 'NLSC EMAP'
-    //}),
+    "臺灣通用電子地圖(標準)": L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}', {
+        attribution: 'NLSC EMAP'
+    }),
     
     // 開放街圖 (備用/預設)
     "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -325,14 +325,14 @@ const fieldMappings = {
         'id': '網格 ID',
         'X_co': 'X坐標',
         'y_co': 'Y坐標',
-        'Mv_Act': '捷運分時人流(人次/小時)' 
+        'Mv_Act': '人流(人次/小時)' 
     },
      // 公車人潮網格
     '公車活躍時段平均人流': { // 💡必須與載入時給定的圖層名稱相同
         'id': '網格 ID',
         'X_co': 'X坐標',
         'y_co': 'Y坐標',
-        'Bv_Act': '公車分時人流(人次/小時)' 
+        'Bv_Act': '人流(人次/小時)' 
     },
     // 捷運站點 (假設 layer_type: '捷運站點')
     '捷運站位置': {
@@ -759,16 +759,29 @@ Promise.all([
 
 function showInfoModal() {
   const html = `
-    <p style=";text-align: left; font-size:1em">資料來源：123</p>
+    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">💡點擊地圖右上角 icon，可開啟控制選單：</p>
     <ul>
-      <li style=";text-align: left; font-size:0.9em">資料集</li>
-      <li style=";text-align: left;  font-size:0.9em">資料集</li>
-      <li style=";text-align: left;  font-size:0.9em">資料集</li>
+        <li style=";text-align: left;  font-size:0.8em">切換/開關圖層</li>
+        <li style=";text-align: left; font-size:0.8em ">調整圖層透明度</li>
+        <li style=";text-align: left;  font-size:0.8em">切換底圖</li>
+    </ul>
+    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">本站台運用下列資料進行加值運算：</p>
+    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">1. 交通部 <a href="https://tdx.transportdata.tw/">TDX 運輸資料流通服務</a></p>
+    <ul>
+        <li style=";text-align: left;  font-size:0.8em">公共運輸-公車</li>
+        <li style=";text-align: left; font-size:0.8em ">臺北市市區公車分時上下車人次資料</li>
+        <li style=";text-align: left;  font-size:0.8em">臺北捷運每日各站分時OD資料(D)</li>
+    </ul>
+    
+    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">2. 內政部 <a href="https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx">國土測繪圖資e商城</a></p>
+    <ul>
+      <li style=";text-align: left; font-size:0.8em ">捷運車站</li>
+      <li style=";text-align: left;  font-size:0.8em">捷運路線</li>
     </ul>
   `;
 
   Swal.fire({
-    title: '標題',
+    title: '資料說明',
     html,
     confirmButtonText: '關閉',
     allowOutsideClick: true,   // 允許點背景關閉（可依需求）

@@ -30,7 +30,7 @@ html, body {
     padding: 4px 20px;
     background-color: #757b7b; /* 淺色背景，可自訂 */
     border-bottom: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1000; /* 確保它在地圖元素之上 */
 
     display: flex;
