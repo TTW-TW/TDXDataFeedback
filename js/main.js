@@ -619,6 +619,8 @@ function showInfoModal() {
       <li style=";text-align: left; font-size:0.8em ">捷運車站</li>
       <li style=";text-align: left;  font-size:0.8em">捷運路線</li>
     </ul>
+    <p style=";text-align: left; font-size:0.6em; line-height:1em; margin-bottom:8px; margin-top:3em">※網站聲明：</p>
+    <p style=";text-align: left; font-size:0.6em; line-height:1em; margin-bottom:8px; margin-left:1em">本平台資料為個人研究成果交流展示，不提供做為學術/商業/法律上之引用或佐證依據。</p>
   `;
 
   Swal.fire({
