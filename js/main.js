@@ -600,27 +600,27 @@ Promise.all([
 
 function showInfoModal() {
   const html = `
-    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">💡點擊地圖右上角 icon，可開啟控制選單：</p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1.5; margin-bottom:8px;">💡點擊地圖右上角 icon，可開啟控制選單：</p>
     <ul>
-        <li style=";text-align: left;  font-size:0.8em">切換/開關圖層</li>
-        <li style=";text-align: left; font-size:0.8em ">調整圖層透明度</li>
-        <li style=";text-align: left;  font-size:0.8em">切換底圖</li>
+        <li style=";text-align: left;  font-size:0.7em">切換/開關圖層</li>
+        <li style=";text-align: left; font-size:0.7em ">調整圖層透明度</li>
+        <li style=";text-align: left;  font-size:0.7em">切換底圖</li>
     </ul>
-    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">本站台運用下列資料進行加值運算：</p>
-    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">1. 交通部 <a href="https://tdx.transportdata.tw/">TDX 運輸資料流通服務</a></p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px;">本站台運用下列資料進行加值運算：</p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px;">1. 交通部 <a href="https://tdx.transportdata.tw/">TDX 運輸資料流通服務</a></p>
     <ul>
-        <li style=";text-align: left;  font-size:0.8em">公共運輸-公車</li>
-        <li style=";text-align: left; font-size:0.8em ">臺北市市區公車分時上下車人次資料</li>
-        <li style=";text-align: left;  font-size:0.8em">臺北捷運每日各站分時OD資料(D)</li>
+        <li style=";text-align: left;  font-size:0.7em">公共運輸-公車</li>
+        <li style=";text-align: left; font-size:0.7em ">臺北市市區公車分時上下車人次資料</li>
+        <li style=";text-align: left;  font-size:0.7em">臺北捷運每日各站分時OD資料(D)</li>
     </ul>
     
-    <p style=";text-align: left; font-size:0.8em; line-height:1em; margin-bottom:8px;">2. 內政部 <a href="https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx">國土測繪圖資e商城</a></p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px;">2. 內政部 <a href="https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx">國土測繪圖資e商城</a></p>
     <ul>
-      <li style=";text-align: left; font-size:0.8em ">捷運車站</li>
-      <li style=";text-align: left;  font-size:0.8em">捷運路線</li>
+      <li style=";text-align: left; font-size:0.7em ">捷運車站</li>
+      <li style=";text-align: left;  font-size:0.7em">捷運路線</li>
     </ul>
-    <p style=";text-align: left; font-size:0.6em; line-height:1em; margin-bottom:8px; margin-top:3em">※網站聲明：</p>
-    <p style=";text-align: left; font-size:0.6em; line-height:1em; margin-bottom:8px; margin-left:1em">本平台資料為個人研究成果交流展示，不提供做為學術/商業/法律上之引用或佐證依據。</p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px; margin-top:2em">※網站聲明：</p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1.5; margin-bottom:8px; margin-left:1em">本平台資料為個人研究成果交流展示，不提供做為學術/商業/法律上之引用或佐證依據。</p>
   `;
 
   Swal.fire({
