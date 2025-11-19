@@ -37,6 +37,15 @@ html, body {
 
 }
 
+.header-title {
+    display: flex;
+    align-items: center;
+}
+img.website-icon {
+    width: 18px;
+    height: 18px;
+}
+
 header h1{
     font-size: 0.8em ;
     font-weight: 500;
@@ -169,6 +178,7 @@ spinner
 
 .swal2-container{
     z-index: 20000;
+    padding: ;
 }
 
 .swal2-container.swal2-backdrop-show,
@@ -177,7 +187,43 @@ spinner
   backdrop-filter: none !important; /* 移除模糊，避免像失焦消失 */
 }
 
+.swal2-html-container{
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+
+.swal2-html-container li {
+    line-height: 120%;
+
+}
+
+.swal2-html-containr p,
+.swal2-html-container ul{
+    line-height: 100%;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+.swal2-title {
+    font-size: 1em; 
+    line-height: 1.5;
+    padding-top: 16px;
+    padding-bottom: 4px;
+}
+
 .sweet2-alert .swal2-text {
     overflow-y: scroll !important;
     width: 100%;
+}
+
+.swal2-actions{
+    margin-top: 4px;
+    margin-bottom: 4px;
+   
+}
+
+.swal2-styled {
+    font-size: 0.8em;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }

@@ -600,34 +600,37 @@ Promise.all([
 
 function showInfoModal() {
   const html = `
-    <p style=";text-align: left; font-size:0.7em; line-height:1.5; margin-bottom:8px;">💡點擊地圖右上角 icon，可開啟控制選單：</p>
+    <p style=";text-align: left; font-size:0.7em; line-height:1; margin-bottom:4px;">💡點擊地圖右上角圖示開啟控制選單：</p>
     <ul>
-        <li style=";text-align: left;  font-size:0.7em">切換/開關圖層</li>
+        <li style=";text-align: left;  font-size:0.7em; ">切換/開關圖層</li>
         <li style=";text-align: left; font-size:0.7em ">調整圖層透明度</li>
         <li style=";text-align: left;  font-size:0.7em">切換底圖</li>
     </ul>
-    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px;">本站台運用下列資料進行加值運算：</p>
-    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px;">1. 交通部 <a href="https://tdx.transportdata.tw/">TDX 運輸資料流通服務</a></p>
-    <ul>
-        <li style=";text-align: left;  font-size:0.7em">公共運輸-公車</li>
-        <li style=";text-align: left; font-size:0.7em ">臺北市市區公車分時上下車人次資料</li>
-        <li style=";text-align: left;  font-size:0.7em">臺北捷運每日各站分時OD資料(D)</li>
-    </ul>
+    <div style="background-color:rgba(247, 247, 247, 0.9); padding:8px; margin-top:8px">
+        <p style=";text-align: left; font-size:0.7em;  margin-bottom:4px;">本站台運用下列資料進行加值運算：</p>
+        <p style=";text-align: left; font-size:0.7em;  margin-bottom:4px;">1. 交通部 <a href="https://tdx.transportdata.tw/">TDX 運輸資料流通服務</a></p>
+        <ul>
+            <li style=";text-align: left;  font-size:0.7em">公共運輸-公車</li>
+            <li style=";text-align: left; font-size:0.7em ; ">臺北市市區公車分時上下車人次資料</li>
+            <li style=";text-align: left;  font-size:0.7em">臺北捷運每日各站分時OD資料(D)</li>
+        </ul>
+        <p style=";text-align: left; font-size:0.7em;  margin-top:4px ; margin-bottom:4px;">2. 內政部 <a href="https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx">國土測繪圖資e商城</a></p>
+        <ul>
+        <li style=";text-align: left; font-size:0.7em; margin-top:0 ; ">捷運車站</li>
+        <li style=";text-align: left;  font-size:0.7em">捷運路線</li>
+        </ul>
+    </div>
     
-    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px;">2. 內政部 <a href="https://whgis-nlsc.moi.gov.tw/Opendata/Files.aspx">國土測繪圖資e商城</a></p>
-    <ul>
-      <li style=";text-align: left; font-size:0.7em ">捷運車站</li>
-      <li style=";text-align: left;  font-size:0.7em">捷運路線</li>
-    </ul>
-    <p style=";text-align: left; font-size:0.7em; line-height:1em; margin-bottom:8px; margin-top:2em">※網站聲明：</p>
-    <p style=";text-align: left; font-size:0.7em; line-height:1.5; margin-bottom:8px; margin-left:1em">本平台資料為個人研究成果交流展示，不提供做為學術/商業/法律上之引用或佐證依據。</p>
-  `;
+    <p style=";text-align: left; font-size:0.65em;  margin-top:8px ; margin-bottom:4px;">※網站聲明：</p>
+    <p style=";text-align: left; font-size:0.65em; line-height:1.5;margin-top:4px ; margin-bottom:4px; margin-left:1em">本平台資料為個人研究成果交流展示，不提供做為學術/商業/法律上之引用或佐證依據。</p>
+    
+        `;
 
   Swal.fire({
     title: '資料說明',
     html,
     confirmButtonText: '關閉',
-    allowOutsideClick: true,   // 允許點背景關閉（可依需求）
+    allowOutsideClick: false,   // 允許點背景關閉（可依需求）
     allowEscapeKey: true,
     backdrop:false,
     //backdrop: 'rgba(0,0,0,0.9)', // 或 false 完全不加遮罩
